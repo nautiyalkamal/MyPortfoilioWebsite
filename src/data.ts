@@ -324,9 +324,9 @@ export const projects = [
 ];
 
 export const skills = [
-  { name: "BIM Modeling", software: ["Revit", "Tekla", "Archicad"] },
+  { name: "BIM Modeling", software: ["Revit", "Tekla", "SKETCHUP"] },
   { name: "Coordination", software: ["Navisworks", "BIM 360", "Scan to Bim"] },
-  { name: "Visualization", software: ["Enscape", "Lumion", "3ds Max", "SketchUp"] },
+  { name: "Visualization", software: ["Enscape", "Lumion", "3ds Max"] },
   { name: "Detailing", software: ["STAAD-PRO", "ETABS", "SAFE"] },
 ];
 
