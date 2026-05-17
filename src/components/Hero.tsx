@@ -65,7 +65,7 @@ export default function Hero() {
               BIM<br className="lg:block" /> DESIGN<br className="lg:block" /> ENGINEER
             </h2>
             <p className="text-xs sm:text-sm font-medium leading-relaxed text-ink/60 max-w-xs md:mx-0">
-              Specializing in Intelligent 3D Modelling, RCC Detailing, and Coordinated BIM Solutions in an Streamline Workflows.
+              Specializing in Intelligent 3D Modelling, RCC Detailing, and Coordinated BIM Solutions in a Streamline Workflow.
             </p>
             <div className="flex items-center gap-3 py-2 px-4 bg-white/60 backdrop-blur-md border border-ink/5 w-fit rounded-full mt-4 shadow-sm relative z-40">
               <span className="relative flex h-2 w-2">
