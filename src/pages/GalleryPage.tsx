@@ -69,7 +69,7 @@ export default function GalleryPage() {
               <motion.img
                 initial={{ filter: "grayscale(100%)" }}
                 whileInView={{ filter: "grayscale(0%)" }}
-                viewport={{ amount: 0.6, margin: "-10%" }}
+                viewport={{ once: true, amount: 0.6, margin: "-10%" }}
                 whileHover={{ scale: 1.05, filter: "grayscale(0%)" }}
                 src={img}
                 alt="Architectural work"

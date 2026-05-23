@@ -15,9 +15,18 @@
   --color-charcoal: #1A1A1A;
 }
 
+html {
+  scroll-behavior: smooth;
+  width: 100%;
+  overflow-x: hidden;
+}
+
 @layer base {
   body {
     @apply bg-bg-primary text-ink font-sans antialiased selection:bg-black selection:text-white;
+    width: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
   }
 
   h1, h2, h3, h4, h5, h6 {

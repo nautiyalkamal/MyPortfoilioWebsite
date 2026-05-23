@@ -36,7 +36,7 @@ export default function Projects() {
         </h2>
         <div className="w-16 h-1.5 bg-ink mb-10 md:mb-12" />
         
-        <div className="flex flex-wrap justify-center gap-2 md:gap-3 max-w-2xl">
+        <div className="w-full flex md:flex-wrap md:justify-center gap-2 md:gap-3 overflow-x-auto md:overflow-x-visible no-scrollbar pb-3 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0">
           {classifications.map((c) => (
             <button
               key={c}
@@ -47,7 +47,7 @@ export default function Projects() {
                   setFilter(c);
                 }
               }}
-              className={`px-5 py-2.5 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all duration-300 border backdrop-blur-md cursor-pointer ${
+              className={`shrink-0 whitespace-nowrap px-5 py-2.5 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all duration-300 border backdrop-blur-md cursor-pointer ${
                 filter === c 
                   ? "bg-ink text-white border-ink shadow-lg scale-105" 
                   : "bg-white/30 text-ink border-white/50 hover:bg-white/60 hover:border-white/80 hover:scale-[1.02] active:scale-[0.98] shadow-sm"
@@ -79,7 +79,7 @@ export default function Projects() {
                 <motion.img
                   initial={{ filter: "grayscale(100%)" }}
                   whileInView={{ filter: "grayscale(0%)" }}
-                  viewport={{ amount: 0.6, margin: "-10%" }}
+                  viewport={{ once: true, amount: 0.6, margin: "-10%" }}
                   whileHover={{ scale: 1.05, filter: "grayscale(0%)" }}
                   transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                   src={project.image}

@@ -20,7 +20,7 @@ export default function Experience() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
-                  className="py-8 md:py-10 px-4 md:px-6 -mx-4 md:-mx-6 rounded-[1.5rem] border-b border-ink/5 flex flex-col md:grid md:grid-cols-4 gap-4 md:gap-6 group hover:bg-white/40 hover:backdrop-blur-md hover:shadow-[0_8px_24px_rgba(140,123,107,0.03)] hover:border-white/60 transition-all duration-500"
+                  className="py-8 md:py-10 px-4 md:px-6 -mx-4 md:-mx-6 rounded-[1.5rem] border-b border-ink/5 flex flex-col md:grid md:grid-cols-4 gap-4 md:gap-6 group lg:hover:bg-white/40 lg:hover:backdrop-blur-md lg:hover:shadow-[0_8px_24px_rgba(140,123,107,0.03)] lg:hover:border-white/60 transition-all duration-500"
                 >
                   <p className="text-[10px] md:text-[9px] uppercase font-bold tracking-[0.2em] text-ink/40 md:pt-1.5">
                     {exp.period}

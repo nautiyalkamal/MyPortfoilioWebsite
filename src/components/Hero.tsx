@@ -10,17 +10,17 @@ export default function Hero() {
     <section id="home" className="relative min-h-[90vh] w-full flex flex-col justify-center px-6 overflow-hidden scroll-mt-32 py-16 md:py-0">
       <div className="relative flex flex-col lg:grid lg:grid-cols-12 gap-8 md:gap-12 items-center h-full pt-16 md:pt-24 lg:pt-16">
         {/* Typography */}
-        <div className="lg:col-span-5 z-30 order-2 lg:order-1 absolute lg:relative top-[14%] sm:top-[18%] lg:top-0 left-[-1rem] sm:left-2 lg:left-0 pointer-events-none lg:pointer-events-auto">
+        <div className="lg:col-span-5 z-30 order-2 lg:order-1 absolute lg:relative top-[10%] sm:top-[14%] lg:top-0 left-[-1rem] sm:left-2 lg:left-0 lg:translate-x-24 lg:translate-y-14 pointer-events-none lg:pointer-events-auto">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
             className="text-left"
           >
-            <p className="font-serif italic text-xl md:text-3xl text-ink/80 mb-2 md:mb-4 drop-shadow-sm lg:drop-shadow-none">
+            <p className="font-serif italic text-xl md:text-3xl text-ink/80 mb-5 md:mb-8 drop-shadow-sm lg:drop-shadow-none">
               Hey, there
             </p>
-            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-bold leading-[0.85] md:leading-[0.8] mb-10 md:mb-12 tracking-tighter drop-shadow-md lg:drop-shadow-none text-ink">
+            <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-[7rem] font-bold leading-[1.05] md:leading-[1.0] mb-10 md:mb-12 tracking-tighter drop-shadow-md lg:drop-shadow-none text-ink">
               I AM<br />KAMAL<br />NAUTIYAL
             </h1>
           </motion.div>
