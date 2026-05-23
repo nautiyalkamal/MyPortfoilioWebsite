@@ -243,17 +243,21 @@ export default function App() {
       if (currentInteractionSpeed < 0.001) currentInteractionSpeed = 0;
 
       if (bgRef.current) {
-        // Luxuriously smooth lag coefficient (0.078) for high-end feel
-        currentX += (targetX - currentX) * 0.078;
-        currentY += (targetY - currentY) * 0.078;
-        currentScroll += (targetScroll - currentScroll) * 0.078;
+        if (window.innerWidth < 1024) {
+          bgRef.current.style.transform = `translate3d(0px, 0px, 0)`;
+        } else {
+          // Luxuriously smooth lag coefficient (0.078) for high-end feel
+          currentX += (targetX - currentX) * 0.078;
+          currentY += (targetY - currentY) * 0.078;
+          currentScroll += (targetScroll - currentScroll) * 0.078;
 
-        // Apply Translate3D for maximum performance GPU page layers
-        bgRef.current.style.transform = `translate3d(${currentX}px, ${currentY + currentScroll}px, 0)`;
+          // Apply Translate3D for maximum performance GPU page layers
+          bgRef.current.style.transform = `translate3d(${currentX}px, ${currentY + currentScroll}px, 0)`;
+        }
       }
 
       // Synchronize compiled shader active parameters with current interactive velocity in real-time
-      if ((window as any).UnicornStudio) {
+      if (window.innerWidth >= 1024 && (window as any).UnicornStudio) {
         const uni = (window as any).UnicornStudio;
         const insts = uni.instances || uni.getActiveInstances?.() || [];
         const instancesList = Array.isArray(insts) 

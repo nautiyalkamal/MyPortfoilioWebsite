@@ -77,14 +77,13 @@ export default function Projects() {
             >
               <div className="relative aspect-[4/5] sm:aspect-[3/4] overflow-hidden rounded-[1rem] md:rounded-[1.5rem] mb-2 md:mb-3">
                 <motion.img
-                  initial={{ filter: "grayscale(100%)" }}
-                  whileInView={{ filter: "grayscale(0%)" }}
-                  viewport={{ once: true, amount: 0.6, margin: "-10%" }}
-                  whileHover={{ scale: 1.05, filter: "grayscale(0%)" }}
-                  transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                  initial={{ opacity: 0.85, scale: 0.98 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true, amount: 0.1 }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                   src={project.image}
                   alt={project.title}
-                  className="w-full h-full object-cover transition-all"
+                  className="w-full h-full object-cover transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] grayscale-0 md:grayscale md:group-hover:grayscale-0 group-hover:scale-105 select-none"
                   referrerPolicy="no-referrer"
                 />
                 

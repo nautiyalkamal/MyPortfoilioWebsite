@@ -67,13 +67,13 @@ export default function GalleryPage() {
               onClick={() => setSelectedIndex(idx)}
             >
               <motion.img
-                initial={{ filter: "grayscale(100%)" }}
-                whileInView={{ filter: "grayscale(0%)" }}
-                viewport={{ once: true, amount: 0.6, margin: "-10%" }}
-                whileHover={{ scale: 1.05, filter: "grayscale(0%)" }}
+                initial={{ opacity: 0.85, scale: 0.98 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 src={img}
                 alt="Architectural work"
-                className="w-full h-auto transition-all duration-700"
+                className="w-full h-auto transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] grayscale-0 md:grayscale md:group-hover:grayscale-0 group-hover:scale-105 select-none"
                 referrerPolicy="no-referrer"
               />
               <div className="absolute inset-0 bg-ink/20 opacity-0 sm:group-hover:opacity-100 transition-opacity flex items-center justify-center">
