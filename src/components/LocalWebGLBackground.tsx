@@ -50,7 +50,7 @@ export default function LocalWebGLBackground() {
   return (
     <div className="absolute inset-0 w-full h-full -z-10 overflow-hidden select-none pointer-events-none rounded-[inherit]">
       {/* Soft overlay gradient to blend nicely with any section theme */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-[#FCFAF6]/30 via-transparent to-[#FAF6F0]/30 opacity-70" />
+      <div className="absolute inset-0 bg-gradient-to-tr from-[#FAFAFA]/30 via-transparent to-[#E4E4E7]/30 opacity-70" />
       
       {/* WebGL Canvas container with custom filters */}
       <div 
@@ -61,7 +61,7 @@ export default function LocalWebGLBackground() {
         data-us-disable-mobile="false"
         className="absolute inset-0 w-full h-full mix-blend-multiply opacity-50 sm:opacity-60"
         style={{
-          filter: 'contrast(0.9) brightness(1.15) opacity(0.85) sepia(0.85) saturate(0.5) hue-rotate(345deg)',
+          filter: 'grayscale(1) contrast(0.9) brightness(1.15) opacity(0.75)',
         }}
       />
       

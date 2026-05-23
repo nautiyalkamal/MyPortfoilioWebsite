@@ -5,8 +5,10 @@ import LocalWebGLBackground from "./LocalWebGLBackground";
 export default function Contact() {
   return (
     <section id="contact" className="py-12 md:py-20 px-6 bg-bg-warm/30 backdrop-blur-[4px] border-t border-ink/5 relative overflow-hidden scroll-mt-24">
-      <LocalWebGLBackground />
-      <div className="absolute top-0 right-0 w-1/3 h-full gradient-bg -z-0 opacity-20" />
+      <div className="hidden md:block">
+        <LocalWebGLBackground />
+      </div>
+      <div className="hidden md:block absolute top-0 right-0 w-1/3 h-full gradient-bg -z-0 opacity-20" />
       
       <div className="max-w-7xl mx-auto z-10 relative">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 md:gap-20">

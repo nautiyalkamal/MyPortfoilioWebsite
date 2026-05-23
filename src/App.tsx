@@ -109,6 +109,11 @@ export default function App() {
     let currentX = 0;
     let currentY = 0;
 
+    let targetNX = 0.5;
+    let targetNY = 0.5;
+    let currentNormalizedX = 0.5;
+    let currentNormalizedY = 0.5;
+
     let targetScroll = 0;
     let currentScroll = 0;
 
@@ -132,9 +137,13 @@ export default function App() {
        // Create responsive target coordinates in viewport space [-1, 1]
       const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
-      // Target shift bounds (max 38px parallax translation for majestic feel)
-      targetX = nx * 38;
-      targetY = ny * 38;
+      // Target shift bounds (max 50px parallax translation for majestic depth)
+      targetX = nx * 50;
+      targetY = ny * 50;
+
+      // Track exact normalized coordinates [0, 1] for shader injection
+      targetNX = e.clientX / window.innerWidth;
+      targetNY = 1.0 - (e.clientY / window.innerHeight);
 
       // Mouse displacement relative speed boost to feed actual animation timeline
       if (lastMouseX !== 0 && lastMouseY !== 0) {
@@ -151,7 +160,7 @@ export default function App() {
       if (totalHeight <= 0) return;
       const progress = window.scrollY / totalHeight;
       // organic downward canvas offset on pages scroll
-      targetScroll = progress * -55;
+      targetScroll = progress * -65;
 
       // Scroll speed translation to drive WebGL shader progression
       const ds = Math.abs(window.scrollY - lastScrollY);
@@ -168,8 +177,12 @@ export default function App() {
       if (e.beta === null || e.gamma === null) return;
       const nx = Math.max(-1, Math.min(1, e.gamma / 22));
       const ny = Math.max(-1, Math.min(1, (e.beta - 42) / 22));
-      targetX = nx * 28;
-      targetY = ny * 28;
+      targetX = nx * 35;
+      targetY = ny * 35;
+
+      // Update shader targets too based on tilt
+      targetNX = (nx + 1) / 2;
+      targetNY = (ny + 1) / 2;
 
       // Gentle continuous gyroscope trigger
       targetInteractionSpeed += 0.08;
@@ -204,9 +217,12 @@ export default function App() {
         const ny = (touch.clientY / window.innerHeight) * 2 - 1;
 
         // Combine basic coordinate mapping with tactile dragging displacement
-        // (nx/ny scales position, deltaX/deltaY provides immediate responsive tactile feedback during swipe actions)
-        targetX = nx * 30 + Math.min(Math.max(deltaX * 0.3, -40), 40);
-        targetY = ny * 30 + Math.min(Math.max(deltaY * 0.3, -40), 40);
+        targetX = nx * 35 + Math.min(Math.max(deltaX * 0.35, -45), 45);
+        targetY = ny * 35 + Math.min(Math.max(deltaY * 0.35, -45), 45);
+
+        // Map to 0-1 for touch point shaders
+        targetNX = touch.clientX / window.innerWidth;
+        targetNY = 1.0 - (touch.clientY / window.innerHeight);
 
         // Track swipe drag velocity
         if (lastMouseX !== 0 && lastMouseY !== 0) {
@@ -227,6 +243,8 @@ export default function App() {
       // Gently return screen tracking coordinates back to their native center state
       targetX = 0;
       targetY = 0;
+      targetNX = 0.5;
+      targetNY = 0.5;
     };
 
     // Direct click surge
@@ -270,17 +288,21 @@ export default function App() {
       currentInteractionSpeed += (targetInteractionSpeed - currentInteractionSpeed) * 0.08;
       if (currentInteractionSpeed < 0.001) currentInteractionSpeed = 0;
 
+      // Smoothly interpolate the 2D coordinates for shader mapping
+      currentNormalizedX += (targetNX - currentNormalizedX) * 0.08;
+      currentNormalizedY += (targetNY - currentNormalizedY) * 0.08;
+
       if (bgRef.current) {
         if (window.innerWidth < 1024) {
-          bgRef.current.style.transform = `translate3d(0px, 0px, 0)`;
+          bgRef.current.style.transform = `translate3d(0px, 0px, 0) scale(1.05)`;
         } else {
           // Luxuriously smooth lag coefficient (0.078) for high-end feel
           currentX += (targetX - currentX) * 0.078;
           currentY += (targetY - currentY) * 0.078;
           currentScroll += (targetScroll - currentScroll) * 0.078;
 
-          // Apply Translate3D for maximum performance GPU page layers
-          bgRef.current.style.transform = `translate3d(${currentX}px, ${currentY + currentScroll}px, 0)`;
+          // Apply Translate3D with extra safety scale to prevent blank borders
+          bgRef.current.style.transform = `translate3d(${currentX}px, ${currentY + currentScroll}px, 0) scale(1.07)`;
         }
       }
 
@@ -303,6 +325,32 @@ export default function App() {
 
             if (instance.settings) {
               instance.settings.speed = currentInteractionSpeed;
+            }
+
+            // Sync interactive mouse position uniforms
+            if (instance.uniforms) {
+              const mouseKeys = ["uMouse", "mouse", "u_mouse", "u_Mouse", "iMouse"];
+              mouseKeys.forEach((k: string) => {
+                if (instance.uniforms[k] !== undefined) {
+                  if (instance.uniforms[k] && typeof instance.uniforms[k].value === "object" && instance.uniforms[k].value !== null) {
+                    if (Array.isArray(instance.uniforms[k].value)) {
+                      instance.uniforms[k].value[0] = currentNormalizedX;
+                      instance.uniforms[k].value[1] = currentNormalizedY;
+                    } else if (instance.uniforms[k].value.x !== undefined) {
+                      instance.uniforms[k].value.x = currentNormalizedX;
+                      instance.uniforms[k].value.y = currentNormalizedY;
+                    }
+                  } else if (typeof instance.uniforms[k] === "object" && instance.uniforms[k] !== null) {
+                    if (Array.isArray(instance.uniforms[k])) {
+                      instance.uniforms[k][0] = currentNormalizedX;
+                      instance.uniforms[k][1] = currentNormalizedY;
+                    } else if (instance.uniforms[k].x !== undefined) {
+                      instance.uniforms[k].x = currentNormalizedX;
+                      instance.uniforms[k].y = currentNormalizedY;
+                    }
+                  }
+                }
+              });
             }
 
             // Fallback manual advancing of uTime/time uniforms if speed is decoupled from runtime tickers
@@ -373,12 +421,12 @@ export default function App() {
 
   return (
     <main className="relative min-h-screen selection:bg-soft-peach selection:text-ink overflow-x-hidden">
-      {/* Unicorn Studio Animated WebGL Background - Custom-blended into a beautiful White & Beige Theme */}
-      <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none overflow-hidden select-none bg-[#FCFAF6]">
-        {/* Soft, warm ambient gradients to set the solid white and beige foundation */}
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#FCFAF6] via-[#FCFAF6]/95 to-[#FAF6F0] opacity-95" />
+      {/* Unicorn Studio Animated WebGL Background - Custom-blended into a beautiful Grey, Black & White Theme */}
+      <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none overflow-hidden select-none bg-[#FAFAFA]">
+        {/* Soft, neutral ambient gradients to set the solid white and grey foundation */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FAFAFA] via-[#F4F4F5]/95 to-[#E4E4E7] opacity-95" />
         
-        {/* WebGL Canvas container with custom filters to shift animation to cream/beige/white tones */}
+        {/* WebGL Canvas container with custom filters to shift animation to clean grey/black/white tones */}
         {!isMobile && (
           <div 
             ref={bgRef}
@@ -390,14 +438,14 @@ export default function App() {
               canvasRendered ? "opacity-55 sm:opacity-65" : "opacity-0"
             }`}
             style={{
-              filter: 'contrast(0.9) brightness(1.15) opacity(0.8) sepia(0.85) saturate(0.5) hue-rotate(345deg)',
+              filter: 'grayscale(1) contrast(0.9) brightness(1.15) opacity(0.7)',
             }}
           />
         )}
 
         {/* Ambient highlighting to create a smooth, premium, layered light-mask surface */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-white/90" />
-        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-[#F2EAE1]/20" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/30 to-[#E4E4E7]/15" />
       </div>
 
       {/* Visual background noise for that paper texture look */}

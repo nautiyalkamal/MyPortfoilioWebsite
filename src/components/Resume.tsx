@@ -12,7 +12,9 @@ export default function Resume() {
 
   return (
     <section id="resume" className="relative overflow-hidden py-12 md:py-20 px-6 scroll-mt-24">
-      <LocalWebGLBackground />
+      <div className="hidden md:block">
+        <LocalWebGLBackground />
+      </div>
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col items-center mb-10 md:mb-14">
           <p className="text-[9px] uppercase font-bold tracking-widest text-ink/40 mb-3">Curriculum Vitae</p>

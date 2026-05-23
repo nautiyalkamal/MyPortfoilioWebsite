@@ -69,7 +69,7 @@ export default function Hero() {
             <p className="text-xs sm:text-sm font-medium leading-relaxed text-ink/60 max-w-xs md:mx-0">
               Specializing in Intelligent 3D Modelling, RCC Detailing, and Coordinated BIM Solutions in a Streamline Workflow.
             </p>
-            <div className="flex items-center gap-3 py-2 px-4 bg-white/60 backdrop-blur-md border border-ink/5 w-fit rounded-full mt-4 shadow-sm relative z-40">
+            <div className="flex items-center gap-3 py-2 px-4 bg-white/60 backdrop-blur-md border border-ink/5 w-fit rounded-full mt-20 md:mt-4 shadow-sm relative z-40">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-orange-400 opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-orange-500"></span>
