@@ -15,8 +15,24 @@ export default function App() {
   const bgRef = useRef<HTMLDivElement>(null);
   const [canvasRendered, setCanvasRendered] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 1024;
+    }
+    return false;
+  });
 
   useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
     // Inject the Unicorn Studio script dynamically if not present
     if (!(window as any).UnicornStudio) {
       (window as any).UnicornStudio = { isInitialized: false };
@@ -67,10 +83,15 @@ export default function App() {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [pathname]);
+  }, [pathname, isMobile]);
 
   // Orchestrator to detect when Unicorn Studio canvas compiles and paint is active
   useEffect(() => {
+    if (isMobile) {
+      setCanvasRendered(true);
+      setContentVisible(true);
+      return;
+    }
     let attempts = 0;
     const interval = setInterval(() => {
       const canvas = document.querySelector('div[data-us-project] canvas');
@@ -85,9 +106,10 @@ export default function App() {
       }
     }, 60);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
+    if (isMobile) return;
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
@@ -354,7 +376,7 @@ export default function App() {
       }
       cancelAnimationFrame(rafId);
     };
-  }, [pathname]);
+  }, [pathname, isMobile]);
 
   useEffect(() => {
     // Basic smooth scroll implementation for Safari and older versions
@@ -382,19 +404,21 @@ export default function App() {
         <div className="absolute inset-0 bg-gradient-to-tr from-[#FCFAF6] via-[#FCFAF6]/95 to-[#FAF6F0] opacity-95" />
         
         {/* WebGL Canvas container with custom filters to shift animation to cream/beige/white tones */}
-        <div 
-          ref={bgRef}
-          data-us-project="Jv9KbHuCYWf4sr35MmdO" 
-          data-us-speed="0"
-          data-us-play-on-hover="true"
-          data-us-disable-mobile="false"
-          className={`absolute inset-0 w-full h-full transition-opacity duration-[2200ms] ease-out mix-blend-multiply ${
-            canvasRendered ? "opacity-55 sm:opacity-65" : "opacity-0"
-          }`}
-          style={{
-            filter: 'contrast(0.9) brightness(1.15) opacity(0.8) sepia(0.85) saturate(0.5) hue-rotate(345deg)',
-          }}
-        />
+        {!isMobile && (
+          <div 
+            ref={bgRef}
+            data-us-project="Jv9KbHuCYWf4sr35MmdO" 
+            data-us-speed="0"
+            data-us-play-on-hover="true"
+            data-us-disable-mobile="true"
+            className={`absolute inset-0 w-full h-full transition-opacity duration-[2200ms] ease-out mix-blend-multiply ${
+              canvasRendered ? "opacity-55 sm:opacity-65" : "opacity-0"
+            }`}
+            style={{
+              filter: 'contrast(0.9) brightness(1.15) opacity(0.8) sepia(0.85) saturate(0.5) hue-rotate(345deg)',
+            }}
+          />
+        )}
 
         {/* Ambient highlighting to create a smooth, premium, layered light-mask surface */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-white/90" />
