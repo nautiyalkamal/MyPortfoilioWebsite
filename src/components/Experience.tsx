@@ -3,7 +3,7 @@ import { experience, skills } from "../data";
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-12 md:py-20 px-6 bg-bg-warm scroll-mt-24">
+    <section id="experience" className="py-12 md:py-20 px-6 bg-bg-warm/30 backdrop-blur-[4px] border-y border-ink/5 scroll-mt-24">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20">
           

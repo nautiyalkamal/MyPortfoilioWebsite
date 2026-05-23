@@ -3,7 +3,7 @@ import { Send, Linkedin, Instagram, Mail, Phone, MessageCircle } from "lucide-re
 
 export default function Contact() {
   return (
-    <section id="contact" className="py-12 md:py-20 px-6 bg-bg-warm relative overflow-hidden scroll-mt-24">
+    <section id="contact" className="py-12 md:py-20 px-6 bg-bg-warm/30 backdrop-blur-[4px] border-t border-ink/5 relative overflow-hidden scroll-mt-24">
       <div className="absolute top-0 right-0 w-1/3 h-full gradient-bg -z-0 opacity-20" />
       
       <div className="max-w-7xl mx-auto z-10 relative">
@@ -36,7 +36,7 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="bg-white p-6 md:p-12 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] shadow-xl">
+          <div className="bg-white/80 backdrop-blur-md p-6 md:p-12 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] shadow-xl border border-white/40">
             <form className="space-y-5 md:space-y-7">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-7">
                 <div className="space-y-1.5">

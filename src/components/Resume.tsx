@@ -24,7 +24,7 @@ export default function Resume() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-white rounded-[1.5rem] shadow-xl shadow-ink/5 border border-ink/5 overflow-hidden"
+          className="bg-white/80 backdrop-blur-md rounded-[1.5rem] shadow-xl shadow-ink/5 border border-ink/5 overflow-hidden"
         >
           {/* Resume Header/Preview Interface */}
           <div className="p-5 md:p-10 border-b border-ink/5 bg-bg-warm/30 flex flex-col md:flex-row justify-between md:items-center gap-5 md:gap-6">
