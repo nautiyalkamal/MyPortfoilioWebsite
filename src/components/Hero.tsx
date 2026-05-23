@@ -1,6 +1,7 @@
 import { motion } from "motion/react";
 import { useState } from "react";
 import ImageModal from "./ImageModal";
+import LocalWebGLBackground from "./LocalWebGLBackground";
 
 export default function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -8,6 +9,7 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-[90vh] w-full flex flex-col justify-center px-6 overflow-hidden scroll-mt-32 py-16 md:py-0">
+      <LocalWebGLBackground />
       <div className="relative flex flex-col lg:grid lg:grid-cols-12 gap-8 md:gap-12 items-center h-full pt-16 md:pt-24 lg:pt-16">
         {/* Typography */}
         <div className="lg:col-span-5 z-30 order-2 lg:order-1 absolute lg:relative top-[10%] sm:top-[14%] lg:top-0 left-[-1rem] sm:left-2 lg:left-0 lg:translate-x-24 lg:translate-y-14 pointer-events-none lg:pointer-events-auto">

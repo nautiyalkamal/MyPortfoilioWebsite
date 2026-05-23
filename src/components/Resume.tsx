@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Download, FileText } from "lucide-react";
+import LocalWebGLBackground from "./LocalWebGLBackground";
 
 export default function Resume() {
   const fileName = "Kamal_Nautiyal_Resume.pdf";
@@ -10,7 +11,8 @@ export default function Resume() {
   };
 
   return (
-    <section id="resume" className="py-12 md:py-20 px-6 scroll-mt-24">
+    <section id="resume" className="relative overflow-hidden py-12 md:py-20 px-6 scroll-mt-24">
+      <LocalWebGLBackground />
       <div className="max-w-4xl mx-auto">
         <div className="flex flex-col items-center mb-10 md:mb-14">
           <p className="text-[9px] uppercase font-bold tracking-widest text-ink/40 mb-3">Curriculum Vitae</p>

@@ -9,12 +9,28 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Portfolio from "./pages/Portfolio";
 import GalleryPage from "./pages/GalleryPage";
+import LocalWebGLBackground from "./components/LocalWebGLBackground";
 
 export default function App() {
   const { pathname, hash } = useLocation();
   const bgRef = useRef<HTMLDivElement>(null);
   const [canvasRendered, setCanvasRendered] = useState(false);
   const [contentVisible, setContentVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== "undefined") {
+      return window.innerWidth < 1024;
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile, { passive: true });
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     // Inject the Unicorn Studio script dynamically if not present
@@ -111,11 +127,10 @@ export default function App() {
 
     let totalHeight = calculateBounds();
     let lastHeightUpdate = performance.now();
-    let cachedWidth = window.innerWidth;
 
     const handleMouseMove = (e: MouseEvent) => {
-      // Create responsive target coordinates in viewport space [-1, 1]
-      const nx = (e.clientX / cachedWidth) * 2 - 1;
+       // Create responsive target coordinates in viewport space [-1, 1]
+      const nx = (e.clientX / window.innerWidth) * 2 - 1;
       const ny = (e.clientY / window.innerHeight) * 2 - 1;
       // Target shift bounds (max 38px parallax translation for majestic feel)
       targetX = nx * 38;
@@ -146,7 +161,6 @@ export default function App() {
 
     const handleResize = () => {
       totalHeight = calculateBounds();
-      cachedWidth = window.innerWidth;
     };
 
     // Immersive tilt responsiveness on iOS & Android devices using gyroscope
@@ -186,7 +200,7 @@ export default function App() {
         const deltaY = touch.clientY - touchStartY;
 
         // Normalized current touch position [-1, 1] relative to window size
-        const nx = (touch.clientX / cachedWidth) * 2 - 1;
+        const nx = (touch.clientX / window.innerWidth) * 2 - 1;
         const ny = (touch.clientY / window.innerHeight) * 2 - 1;
 
         // Combine basic coordinate mapping with tactile dragging displacement
@@ -203,6 +217,9 @@ export default function App() {
         }
         lastMouseX = touch.clientX;
         lastMouseY = touch.clientY;
+
+        // Seamlessly update standard scroll updates on momentum slides
+        handleScroll();
       }
     };
 
@@ -230,9 +247,6 @@ export default function App() {
     }
 
     let rafId: number;
-    let lastAppliedTransform = "";
-    let instancesListCache: any[] = [];
-    let lastInstanceUpdate = 0;
 
     const updateLoop = () => {
       const now = performance.now();
@@ -257,91 +271,62 @@ export default function App() {
       if (currentInteractionSpeed < 0.001) currentInteractionSpeed = 0;
 
       if (bgRef.current) {
-        let newTransform = "";
-        if (cachedWidth < 1024) {
-          newTransform = `translate3d(0px, 0px, 0)`;
+        if (window.innerWidth < 1024) {
+          bgRef.current.style.transform = `translate3d(0px, 0px, 0)`;
         } else {
           // Luxuriously smooth lag coefficient (0.078) for high-end feel
           currentX += (targetX - currentX) * 0.078;
           currentY += (targetY - currentY) * 0.078;
           currentScroll += (targetScroll - currentScroll) * 0.078;
 
-          // Round values to 2 decimal places to prevent layout subpixel thrashing and avoid unnecessary style writes
-          const rx = Math.round(currentX * 100) / 100;
-          const ry = Math.round((currentY + currentScroll) * 100) / 100;
-          newTransform = `translate3d(${rx}px, ${ry}px, 0)`;
-        }
-
-        if (lastAppliedTransform !== newTransform) {
-          bgRef.current.style.transform = newTransform;
-          lastAppliedTransform = newTransform;
+          // Apply Translate3D for maximum performance GPU page layers
+          bgRef.current.style.transform = `translate3d(${currentX}px, ${currentY + currentScroll}px, 0)`;
         }
       }
 
       // Synchronize compiled shader active parameters with current interactive velocity in real-time
-      if (cachedWidth >= 1024) {
-        // Query the active instances periodically instead of per-frame to save cpu query cost
-        if (now - lastInstanceUpdate > 400) {
-          lastInstanceUpdate = now;
-          if ((window as any).UnicornStudio) {
-            const uni = (window as any).UnicornStudio;
-            const insts = uni.instances || uni.getActiveInstances?.() || [];
-            instancesListCache = Array.isArray(insts) 
-              ? insts 
-              : (insts instanceof Map ? Array.from(insts.values()) : Object.values(insts));
-          } else {
-            instancesListCache = [];
-          }
-        }
+      if (window.innerWidth >= 1024 && (window as any).UnicornStudio) {
+        const uni = (window as any).UnicornStudio;
+        const insts = uni.instances || uni.getActiveInstances?.() || [];
+        const instancesList = Array.isArray(insts) 
+          ? insts 
+          : (insts instanceof Map ? Array.from(insts.values()) : Object.values(insts));
 
-        const roundedSpeed = Math.round(currentInteractionSpeed * 1000) / 1000;
-
-        instancesListCache.forEach((instance: any) => {
+        instancesList.forEach((instance: any) => {
           if (instance) {
-            // Adjust the instance setting or property dynamically (only update when the rounded value changes to save draw overhead)
-            if (instance.__lastAppliedSpeed !== roundedSpeed) {
-              if (typeof instance.setSpeed === "function") {
-                try { instance.setSpeed(roundedSpeed); } catch (e) {}
-              } else {
-                instance.speed = roundedSpeed;
-              }
+            // Adjust the instance setting or property dynamically
+            if (typeof instance.setSpeed === "function") {
+              try { instance.setSpeed(currentInteractionSpeed); } catch (e) {}
+            } else {
+              instance.speed = currentInteractionSpeed;
+            }
 
-              if (instance.settings) {
-                instance.settings.speed = roundedSpeed;
-              }
-              instance.__lastAppliedSpeed = roundedSpeed;
+            if (instance.settings) {
+              instance.settings.speed = currentInteractionSpeed;
             }
 
             // Fallback manual advancing of uTime/time uniforms if speed is decoupled from runtime tickers
-            if (roundedSpeed > 0 && instance.uniforms) {
+            if (currentInteractionSpeed > 0 && instance.uniforms) {
               const keys = ["uTime", "time", "u_time", "u_Time", "t", "u_t"];
               keys.forEach((k: string) => {
                 if (instance.uniforms[k] !== undefined) {
                   if (instance.uniforms[k] && typeof instance.uniforms[k].value === "number") {
-                    instance.uniforms[k].value += dt * roundedSpeed;
+                    instance.uniforms[k].value += dt * currentInteractionSpeed;
                   } else if (typeof instance.uniforms[k] === "number") {
-                    instance.uniforms[k] += dt * roundedSpeed;
+                    instance.uniforms[k] += dt * currentInteractionSpeed;
                   }
                 }
               });
             }
 
             // Power-savings support: play while moving, pause immediately when frozen
-            // Critical optimization: Only trigger .play() or .pause() when the playback state actually transitions
-            // to avoid rendering thread locking inside high-frequency requestAnimationFrame ticks.
-            if (roundedSpeed > 0.002) {
-              if (instance.__isPlaying !== true) {
-                if (typeof instance.play === "function") {
-                  try { instance.play(); } catch (e) {}
-                }
-                instance.__isPlaying = true;
+            if (currentInteractionSpeed > 0.002) {
+              if (typeof instance.play === "function") {
+                try { instance.play(); } catch (e) {}
               }
             } else {
-              if (instance.__isPlaying !== false) {
-                if (typeof instance.pause === "function") {
-                  try { instance.pause(); } catch (e) {}
-                }
-                instance.__isPlaying = false;
+              if (typeof instance.pause === "function") {
+                try { instance.pause(); } catch (e) {}
               }
             }
           }
@@ -394,19 +379,21 @@ export default function App() {
         <div className="absolute inset-0 bg-gradient-to-tr from-[#FCFAF6] via-[#FCFAF6]/95 to-[#FAF6F0] opacity-95" />
         
         {/* WebGL Canvas container with custom filters to shift animation to cream/beige/white tones */}
-        <div 
-          ref={bgRef}
-          data-us-project="Jv9KbHuCYWf4sr35MmdO" 
-          data-us-speed="0"
-          data-us-play-on-hover="true"
-          data-us-disable-mobile="false"
-          className={`absolute inset-0 w-full h-full transition-opacity duration-[2200ms] ease-out mix-blend-multiply ${
-            canvasRendered ? "opacity-55 sm:opacity-65" : "opacity-0"
-          }`}
-          style={{
-            filter: 'contrast(0.9) brightness(1.15) opacity(0.8) sepia(0.85) saturate(0.5) hue-rotate(345deg)',
-          }}
-        />
+        {!isMobile && (
+          <div 
+            ref={bgRef}
+            data-us-project="Jv9KbHuCYWf4sr35MmdO" 
+            data-us-speed="0"
+            data-us-play-on-hover="true"
+            data-us-disable-mobile="false"
+            className={`absolute inset-0 w-full h-full transition-opacity duration-[2200ms] ease-out mix-blend-multiply ${
+              canvasRendered ? "opacity-55 sm:opacity-65" : "opacity-0"
+            }`}
+            style={{
+              filter: 'contrast(0.9) brightness(1.15) opacity(0.8) sepia(0.85) saturate(0.5) hue-rotate(345deg)',
+            }}
+          />
+        )}
 
         {/* Ambient highlighting to create a smooth, premium, layered light-mask surface */}
         <div className="absolute inset-0 bg-gradient-to-b from-white/80 via-transparent to-white/90" />
@@ -433,8 +420,9 @@ export default function App() {
         </Routes>
         
         {/* Extra spacing Footer */}
-        <footer className="py-12 bg-bg-warm flex justify-center items-center px-6">
-           <div className="flex items-center gap-3">
+        <footer className="relative overflow-hidden py-12 bg-bg-warm flex justify-center items-center px-6">
+           <LocalWebGLBackground />
+           <div className="flex items-center gap-3 relative z-10">
               <span className="w-1 h-1 bg-ink rounded-full opacity-40" />
               <p className="text-[10px] md:text-[11px] uppercase font-bold tracking-[0.25em] opacity-40 text-center">Architecting the future one bit at a time</p>
               <span className="w-1 h-1 bg-ink rounded-full opacity-40" />

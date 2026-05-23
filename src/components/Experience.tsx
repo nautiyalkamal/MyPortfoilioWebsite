@@ -80,7 +80,7 @@ export default function Experience() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="glass-premium-dark text-white p-6 md:p-10 rounded-[2rem] space-y-4 md:space-y-6 relative overflow-hidden group shadow-2xl border border-white/10"
+                className="bg-black text-white p-6 md:p-10 rounded-[2rem] space-y-4 md:space-y-6 relative overflow-hidden group shadow-2xl border border-white/10"
             >
                 <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tight leading-none text-white/95 relative z-10">

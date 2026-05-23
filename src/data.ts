@@ -11,7 +11,7 @@ export const projects = [
   {
     id: 1,
     title: "Eco-Residential BIM Modeling",
-    classification: "RESIDENCIAL",
+    classification: "RESIDENTIAL",
     category: "Residential Architecture",
     description: "Full parametric modeling for a sustainable high-end residential complex in Oslo.",
     software: ["SKETCHUP", "Dynamo", "BIM 360"],
@@ -57,7 +57,7 @@ export const projects = [
   {
     id: 4,
     title: "Dr. Vimal PentHouse",
-    classification: "RESIDENCIAL",
+    classification: "RESIDENTIAL",
     category: "Interior Architecture",
     description: "BIM modeling for a high-traffic airport lounge focusing on acoustics and furniture ergonomics.",
     software: ["Revit", "Rhino", "Grasshopper"],
@@ -101,7 +101,7 @@ export const projects = [
   },
   {
     id: 5,
-    title: "Commercial Ocuupancy Building",
+    title: "Commercial Occupancy Building",
     classification: "ARCHITECTURE",
     category: "Public Architecture",
     description: "Concept design and BIM implementation for a sustainable civic hub.",
@@ -161,7 +161,7 @@ export const projects = [
   },
   {
     id: 10,
-    title: "Dinning cum Lounge Area",
+    title: "Dining cum Lounge Area",
     classification: "INTERIOR",
     category: "MEP Coordination",
     description: "Intense coordination of mechanical, electrical, and plumbing systems for a 500-bed specialty hospital.",
@@ -207,7 +207,7 @@ export const projects = [
   {
     id: 13,
     title: "Luxury Penthouse Interior",
-    classification: "RESIDENCIAL",
+    classification: "RESIDENTIAL",
     category: "Interior Architecture",
     description: "Detailed interior BIM modeling for a high-end penthouse, including custom millwork and lighting integration.",
     software: ["Revit", "3ds Max", "V-Ray"],
@@ -222,7 +222,7 @@ export const projects = [
   {
     id: 14,
     title: "Suburban Multi-Family Housing",
-    classification: "RESIDENCIAL",
+    classification: "RESIDENTIAL",
     category: "Residential Architecture",
     description: "BIM-driven design for a 12-unit residential complex focusing on thermal efficiency and community spaces.",
     software: ["Revit", "SKETCHUP", "AutoCAD"],
@@ -237,7 +237,7 @@ export const projects = [
   {
     id: 15,
     title: "Kainthola Niwas - Family Housing",
-    classification: "RESIDENCIAL",
+    classification: "RESIDENTIAL",
     category: "Sustainable Design",
     description: "Modeling of a modular, prefabricated cabin designed for minimal site impact and energy independence.",
     software: ["Revit", "SKETCHUP", "Enscape"],
@@ -345,7 +345,7 @@ export const experience = [
   },
   {
     period: "2024 - 2025",
-    role: "Architectural DESIGHNER",
+    role: "Architectural Designer",
     company: "UNIQUE CIVIL",
     description: "Focused on detailed construction documentation and architectural drafting using AutoCAD and Revit.",
   },
