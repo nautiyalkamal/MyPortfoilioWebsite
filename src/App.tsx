@@ -110,6 +110,7 @@ export default function App() {
     };
 
     let totalHeight = calculateBounds();
+    let lastHeightUpdate = performance.now();
 
     const handleMouseMove = (e: MouseEvent) => {
       // Create responsive target coordinates in viewport space [-1, 1]
@@ -131,7 +132,6 @@ export default function App() {
     };
 
     const handleScroll = () => {
-      totalHeight = calculateBounds();
       if (totalHeight <= 0) return;
       const progress = window.scrollY / totalHeight;
       // organic downward canvas offset on pages scroll
@@ -141,6 +141,10 @@ export default function App() {
       const ds = Math.abs(window.scrollY - lastScrollY);
       targetInteractionSpeed += ds * 0.025; // boost speed based on scroll speed
       lastScrollY = window.scrollY;
+    };
+
+    const handleResize = () => {
+      totalHeight = calculateBounds();
     };
 
     // Immersive tilt responsiveness on iOS & Android devices using gyroscope
@@ -216,6 +220,7 @@ export default function App() {
 
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
     window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleResize, { passive: true });
     window.addEventListener("touchstart", handleTouchStart, { passive: true });
     window.addEventListener("touchmove", handleTouchMove, { passive: true });
     window.addEventListener("touchend", handleTouchEnd, { passive: true });
@@ -226,10 +231,20 @@ export default function App() {
     }
 
     let rafId: number;
+    let lastAppliedTransform = "";
+    let instancesListCache: any[] = [];
+    let lastInstanceUpdate = 0;
+
     const updateLoop = () => {
       const now = performance.now();
       const dt = Math.min((now - lastTime) / 1000, 0.1); // prevent extreme jumps
       lastTime = now;
+
+      // Update total scroll heights periodically (every 1000ms) to ensure absolute alignment without thrashed synchronous layout query calls
+      if (now - lastHeightUpdate > 1000) {
+        lastHeightUpdate = now;
+        totalHeight = calculateBounds();
+      }
 
       // Natural, modern decay calculation for interaction tracking
       targetInteractionSpeed *= Math.exp(-3.2 * dt); // exponential decay towards 0
@@ -238,33 +253,49 @@ export default function App() {
       if (targetInteractionSpeed > 1.6) targetInteractionSpeed = 1.6;
       if (targetInteractionSpeed < 0.001) targetInteractionSpeed = 0;
 
-      // Interpolate the actual active speed towards the target
+      // Interpolate the active speed towards the target
       currentInteractionSpeed += (targetInteractionSpeed - currentInteractionSpeed) * 0.08;
       if (currentInteractionSpeed < 0.001) currentInteractionSpeed = 0;
 
       if (bgRef.current) {
+        let newTransform = "";
         if (window.innerWidth < 1024) {
-          bgRef.current.style.transform = `translate3d(0px, 0px, 0)`;
+          newTransform = `translate3d(0px, 0px, 0)`;
         } else {
           // Luxuriously smooth lag coefficient (0.078) for high-end feel
           currentX += (targetX - currentX) * 0.078;
           currentY += (targetY - currentY) * 0.078;
           currentScroll += (targetScroll - currentScroll) * 0.078;
 
-          // Apply Translate3D for maximum performance GPU page layers
-          bgRef.current.style.transform = `translate3d(${currentX}px, ${currentY + currentScroll}px, 0)`;
+          // Round values to 2 decimal places to prevent layout subpixel thrashing and avoid unnecessary style writes
+          const rx = Math.round(currentX * 100) / 100;
+          const ry = Math.round((currentY + currentScroll) * 100) / 100;
+          newTransform = `translate3d(${rx}px, ${ry}px, 0)`;
+        }
+
+        if (lastAppliedTransform !== newTransform) {
+          bgRef.current.style.transform = newTransform;
+          lastAppliedTransform = newTransform;
         }
       }
 
       // Synchronize compiled shader active parameters with current interactive velocity in real-time
-      if (window.innerWidth >= 1024 && (window as any).UnicornStudio) {
-        const uni = (window as any).UnicornStudio;
-        const insts = uni.instances || uni.getActiveInstances?.() || [];
-        const instancesList = Array.isArray(insts) 
-          ? insts 
-          : (insts instanceof Map ? Array.from(insts.values()) : Object.values(insts));
+      if (window.innerWidth >= 1024) {
+        // Query the active instances periodically instead of per-frame to save cpu query cost
+        if (now - lastInstanceUpdate > 400) {
+          lastInstanceUpdate = now;
+          if ((window as any).UnicornStudio) {
+            const uni = (window as any).UnicornStudio;
+            const insts = uni.instances || uni.getActiveInstances?.() || [];
+            instancesListCache = Array.isArray(insts) 
+              ? insts 
+              : (insts instanceof Map ? Array.from(insts.values()) : Object.values(insts));
+          } else {
+            instancesListCache = [];
+          }
+        }
 
-        instancesList.forEach((instance: any) => {
+        instancesListCache.forEach((instance: any) => {
           if (instance) {
             // Adjust the instance setting or property dynamically
             if (typeof instance.setSpeed === "function") {
@@ -313,6 +344,7 @@ export default function App() {
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("touchstart", handleTouchStart);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);

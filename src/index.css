@@ -44,6 +44,9 @@ html {
     0 4px 30px rgba(0, 0, 0, 0.01),
     0 10px 40px -10px rgba(140, 123, 107, 0.08),
     inset 0 1px 1px rgba(255, 255, 255, 0.82);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .glass-premium-accent {
@@ -54,6 +57,9 @@ html {
   box-shadow: 
     0 8px 32px 0 rgba(140, 123, 107, 0.05),
     inset 0 1px 2px rgba(255, 255, 255, 0.95);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .glass-premium-dark {
@@ -64,6 +70,9 @@ html {
   box-shadow: 
     0 12px 40px -6px rgba(0, 0, 0, 0.3),
     inset 0 1px 1px rgba(255, 255, 255, 0.15);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 .glass-premium-input {
