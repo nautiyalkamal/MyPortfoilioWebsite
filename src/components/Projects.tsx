@@ -47,10 +47,10 @@ export default function Projects() {
                   setFilter(c);
                 }
               }}
-              className={`px-4 md:px-5 py-2 md:py-1.5 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all ${
+              className={`px-5 py-2.5 rounded-full text-[8px] md:text-[9px] font-bold uppercase tracking-widest transition-all duration-300 border backdrop-blur-md cursor-pointer ${
                 filter === c 
-                  ? "bg-ink text-white" 
-                  : "bg-ink/5 text-ink hover:bg-ink/10"
+                  ? "bg-ink text-white border-ink shadow-lg scale-105" 
+                  : "bg-white/30 text-ink border-white/50 hover:bg-white/60 hover:border-white/80 hover:scale-[1.02] active:scale-[0.98] shadow-sm"
               }`}
             >
               {c}
@@ -94,11 +94,11 @@ export default function Projects() {
                     </div>
                 </div>
 
-                <div className="absolute top-2 right-2 md:top-4 md:right-4 flex flex-wrap gap-1 justify-end max-w-[80px] md:max-w-[120px]">
+                <div className="absolute top-2 right-2 md:top-4 md:right-4 flex flex-wrap gap-1.5 justify-end max-w-[80px] md:max-w-[120px]">
                   {project.software.slice(0, 2).map((s) => (
                     <span
                       key={s}
-                      className="bg-white/90 backdrop-blur px-1 py-0.5 rounded-full text-[4px] md:text-[6px] uppercase font-bold tracking-widest text-ink shadow-sm"
+                      className="bg-white/40 backdrop-blur-md border border-white/40 px-2.5 py-1 rounded-full text-[5px] md:text-[7px] uppercase font-bold tracking-widest text-ink shadow-[0_2px_12px_rgba(0,0,0,0.04)]"
                     >
                       {s}
                     </span>

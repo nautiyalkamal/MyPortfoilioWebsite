@@ -36,38 +36,39 @@ export default function Contact() {
             </div>
           </div>
 
-          <div className="bg-white/80 backdrop-blur-md p-6 md:p-12 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] shadow-xl border border-white/40">
+          <div className="glass-premium p-6 md:p-12 lg:p-14 rounded-[1.5rem] md:rounded-[2.5rem] relative overflow-hidden">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-[#8C7B6B]/5 blur-3xl -z-10 rounded-full" />
             <form className="space-y-5 md:space-y-7">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-7">
                 <div className="space-y-1.5">
-                  <label className="text-[9px] uppercase font-bold tracking-widest text-ink/40 ml-1">Your Name</label>
+                  <label className="text-[9px] uppercase font-bold tracking-widest text-[#8C7B6B] ml-1">Your Name</label>
                   <input
                     type="text"
                     placeholder="John Doe"
-                    className="w-full px-4 md:px-5 py-2.5 md:py-3.5 bg-ink/5 border-none rounded-lg md:rounded-xl outline-none focus:ring-1 focus:ring-ink transition-all text-xs sm:text-sm font-medium"
+                    className="w-full px-4 md:px-5 py-2.5 md:py-3.5 bg-white/20 hover:bg-white/40 border-none rounded-lg md:rounded-xl outline-none shadow-inner text-xs sm:text-sm font-medium glass-premium-input"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="text-[9px] uppercase font-bold tracking-widest text-ink/40 ml-1">Email Address</label>
+                  <label className="text-[9px] uppercase font-bold tracking-widest text-[#8C7B6B] ml-1">Email Address</label>
                   <input
                     type="email"
                     placeholder="john@example.com"
-                    className="w-full px-4 md:px-5 py-2.5 md:py-3.5 bg-ink/5 border-none rounded-lg md:rounded-xl outline-none focus:ring-1 focus:ring-ink transition-all text-xs sm:text-sm font-medium"
+                    className="w-full px-4 md:px-5 py-2.5 md:py-3.5 bg-white/20 hover:bg-white/40 border-none rounded-lg md:rounded-xl outline-none shadow-inner text-xs sm:text-sm font-medium glass-premium-input"
                   />
                 </div>
               </div>
               <div className="space-y-1.5">
-                <label className="text-[9px] uppercase font-bold tracking-widest text-ink/40 ml-1">Project Brief</label>
+                <label className="text-[9px] uppercase font-bold tracking-widest text-[#8C7B6B] ml-1">Project Brief</label>
                 <textarea
                   rows={3}
                   placeholder="Tell me about your project..."
-                  className="w-full px-4 md:px-5 py-2.5 md:py-3.5 bg-ink/5 border-none rounded-lg md:rounded-xl outline-none focus:ring-1 focus:ring-ink transition-all text-xs sm:text-sm font-medium resize-none"
+                  className="w-full px-4 md:px-5 py-2.5 md:py-3.5 bg-white/20 hover:bg-white/40 border-none rounded-lg md:rounded-xl outline-none shadow-inner text-xs sm:text-sm font-medium resize-none glass-premium-input"
                 />
               </div>
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="w-full bg-ink text-white py-4 md:py-5 rounded-lg md:rounded-xl flex items-center justify-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-widest"
+                className="w-full bg-ink text-white py-4 md:py-5 rounded-lg md:rounded-xl flex items-center justify-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-widest cursor-pointer shadow-lg hover:bg-charcoal transition-all"
               >
                 <span>Send Message</span>
                 <Send size={12} />

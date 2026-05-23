@@ -24,24 +24,24 @@ export default function Resume() {
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          className="bg-white/80 backdrop-blur-md rounded-[1.5rem] shadow-xl shadow-ink/5 border border-ink/5 overflow-hidden"
+          className="glass-premium rounded-[2rem] overflow-hidden transition-all duration-500 hover:shadow-[0_16px_48px_rgba(140,123,107,0.12)] border border-white/60"
         >
           {/* Resume Header/Preview Interface */}
-          <div className="p-5 md:p-10 border-b border-ink/5 bg-bg-warm/30 flex flex-col md:flex-row justify-between md:items-center gap-5 md:gap-6">
+          <div className="p-6 md:p-12 border-b border-white/40 bg-white/20 flex flex-col md:flex-row justify-between md:items-center gap-5 md:gap-6">
             <div className="flex items-center gap-3 md:gap-5">
-              <div className="w-10 h-10 md:w-14 md:h-14 bg-ink rounded-lg md:rounded-xl flex items-center justify-center text-white shrink-0">
-                <FileText size={20} md:size={28} />
+              <div className="w-12 h-12 md:w-16 md:h-16 bg-ink rounded-xl md:rounded-2xl flex items-center justify-center text-white shrink-0 shadow-lg">
+                <FileText size={22} md:size={30} />
               </div>
               <div className="min-w-0">
-                <h3 className="text-base md:text-lg font-bold truncate">{fileName}</h3>
-                <p className="text-[10px] md:text-xs text-ink/40">Updated May 2026 • 2.4 MB</p>
+                <h3 className="text-base md:text-xl font-bold tracking-tight text-ink">{fileName}</h3>
+                <p className="text-[10px] md:text-xs text-ink/50 font-medium">Updated May 2026 • 2.4 MB</p>
               </div>
             </div>
             
             <div className="w-full md:w-auto">
               <button 
                 onClick={handleDownload}
-                className="w-full md:w-auto flex items-center justify-center gap-2 px-5 py-2.5 bg-ink text-white rounded-full text-xs font-bold uppercase tracking-widest hover:scale-105 transition-transform"
+                className="w-full md:w-auto flex items-center justify-center gap-2 px-6 py-3.5 bg-ink text-white rounded-full text-xs font-bold uppercase tracking-widest hover:scale-102 hover:bg-charcoal active:scale-95 transition-all shadow-md cursor-pointer"
               >
                 <Download size={16} />
                 Download

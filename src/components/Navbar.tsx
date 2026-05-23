@@ -12,16 +12,16 @@ export default function Navbar() {
       <motion.nav
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        className="fixed top-0 left-0 w-full z-50 px-4 md:px-10 py-5 md:py-6 flex justify-between items-center mix-blend-difference"
+        className="fixed top-0 left-0 w-full z-50 px-4 md:px-10 py-5 md:py-6 flex justify-between items-center text-ink"
       >
         <div className="flex items-center gap-2 md:gap-8">
           <button 
             onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden text-white p-2.5 -ml-4 hover:bg-white/10 rounded-full transition-colors"
+            className="lg:hidden text-ink p-2.5 -ml-4 hover:bg-ink/5 rounded-full transition-colors"
           >
             {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
-          <Link to="/" className="text-white font-display text-lg md:text-xl font-bold tracking-tighter whitespace-nowrap">
+          <Link to="/" className="text-ink font-display text-lg md:text-xl font-bold tracking-tighter whitespace-nowrap">
             Kamal Nautiyal.
           </Link>
           <div className="hidden lg:flex gap-6 md:gap-8">
@@ -30,7 +30,7 @@ export default function Navbar() {
                 <Link
                   key={link.name}
                   to={link.href}
-                  className="text-white/60 hover:text-white text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors font-bold"
+                  className="text-ink/60 hover:text-ink text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors font-bold"
                 >
                   {link.name}
                 </Link>
@@ -38,7 +38,7 @@ export default function Navbar() {
                 <a
                   key={link.name}
                   href={link.href}
-                  className="text-white/60 hover:text-white text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors font-bold"
+                  className="text-ink/60 hover:text-ink text-[10px] md:text-xs uppercase tracking-[0.2em] transition-colors font-bold"
                 >
                   {link.name}
                 </a>
@@ -50,7 +50,7 @@ export default function Navbar() {
         <div className="flex items-center gap-1.5 md:gap-4">
           <Link
             to="/portfolio"
-            className="border border-white/20 text-white px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 text-[9px] md:text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors hover:bg-white/10"
+            className="border border-ink/20 text-ink px-4 md:px-6 py-2 md:py-3 rounded-full flex items-center gap-2 text-[9px] md:text-xs font-bold uppercase tracking-widest cursor-pointer transition-colors hover:bg-ink/5"
           >
             <span className="hidden sm:inline">View Portfolio</span>
             <span className="sm:hidden">Projects</span>
@@ -74,7 +74,7 @@ export default function Navbar() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed inset-0 z-[60] bg-ink text-white lg:hidden flex flex-col p-8"
+            className="fixed inset-0 z-[60] bg-charcoal/85 backdrop-blur-2xl text-white lg:hidden flex flex-col p-8 border-l border-white/10 shadow-2xl"
           >
             <div className="flex justify-between items-center mb-16">
               <span className="text-xl font-bold tracking-tighter">Menu</span>

@@ -20,7 +20,7 @@ export default function Experience() {
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.8, delay: index * 0.1 }}
-                  className="py-8 md:py-10 border-b border-ink/10 flex flex-col md:grid md:grid-cols-4 gap-4 md:gap-6 group"
+                  className="py-8 md:py-10 px-4 md:px-6 -mx-4 md:-mx-6 rounded-[1.5rem] border-b border-ink/5 flex flex-col md:grid md:grid-cols-4 gap-4 md:gap-6 group hover:bg-white/40 hover:backdrop-blur-md hover:shadow-[0_8px_24px_rgba(140,123,107,0.03)] hover:border-white/60 transition-all duration-500"
                 >
                   <p className="text-[10px] md:text-[9px] uppercase font-bold tracking-[0.2em] text-ink/40 md:pt-1.5">
                     {exp.period}
@@ -80,19 +80,20 @@ export default function Experience() {
                 initial={{ opacity: 0, scale: 0.95 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                className="bg-ink text-white p-6 md:p-10 rounded-[1.5rem] space-y-4 md:space-y-6"
+                className="glass-premium-dark text-white p-6 md:p-10 rounded-[2rem] space-y-4 md:space-y-6 relative overflow-hidden group shadow-2xl border border-white/10"
             >
-                <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tight leading-none">
+                <div className="absolute inset-0 bg-gradient-to-tr from-orange-500/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <h3 className="text-xl md:text-2xl font-bold uppercase tracking-tight leading-none text-white/95 relative z-10">
                     TURNING YOUR VISION<br />INTO REALITY
                 </h3>
-                <div className="grid grid-cols-2 gap-3 md:gap-6 pt-2 md:pt-4">
+                <div className="grid grid-cols-2 gap-3 md:gap-6 pt-2 md:pt-4 relative z-10">
                     <div className="space-y-0.5 md:space-y-1">
-                        <p className="text-2xl md:text-3xl font-bold">49+</p>
-                        <p className="text-[8px] md:text-[9px] uppercase font-bold tracking-widest opacity-40">completed projects</p>
+                        <p className="text-2xl md:text-3xl font-bold text-white bg-clip-text">49+</p>
+                        <p className="text-[8px] md:text-[9px] uppercase font-bold tracking-widest text-white/40">completed projects</p>
                     </div>
                     <div className="space-y-0.5 md:space-y-1">
-                        <p className="text-2xl md:text-3xl font-bold">18+</p>
-                        <p className="text-[8px] md:text-[9px] uppercase font-bold tracking-widest opacity-40">cities</p>
+                        <p className="text-2xl md:text-3xl font-bold text-white">18+</p>
+                        <p className="text-[8px] md:text-[9px] uppercase font-bold tracking-widest text-white/40">cities</p>
                     </div>
                 </div>
             </motion.div>
