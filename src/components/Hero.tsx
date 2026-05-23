@@ -1,12 +1,52 @@
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageModal from "./ImageModal";
 import LocalWebGLBackground from "./LocalWebGLBackground";
 
 export default function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [scrollGlow, setScrollGlow] = useState(0);
   const heroImage = "https://i.ibb.co/HDkHfjKH/kml.png";
+
+  useEffect(() => {
+    // Elegant React effect for tracking scroll centering
+    if (typeof window !== "undefined") {
+      const handleScroll = () => {
+        const imgEl = document.getElementById("hero-portrait");
+        if (!imgEl) return;
+        const rect = imgEl.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const elementCenter = rect.top + rect.height / 2;
+        const viewportCenter = viewportHeight / 2;
+        
+        // Dynamic glow behavior: max center glow within 35% of middle screen
+        const maxDistance = viewportHeight * 0.35;
+        const distance = Math.abs(elementCenter - viewportCenter);
+        
+        if (distance < maxDistance) {
+          const intensity = 1 - (distance / maxDistance);
+          setScrollGlow(Math.max(0, Math.min(1, intensity)));
+        } else {
+          setScrollGlow(0);
+        }
+      };
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("resize", handleScroll, { passive: true });
+      // Initial check
+      setTimeout(handleScroll, 120);
+      return () => {
+        window.removeEventListener("scroll", handleScroll);
+        window.removeEventListener("resize", handleScroll);
+      };
+    }
+  }, []);
+
+  const glowOpacity = Math.max(isHovered ? 1.0 : 0.0, scrollGlow * 0.85);
+  const currentFilter = glowOpacity > 0.08
+    ? `contrast(${1.02 + glowOpacity * 0.06}) brightness(${1.01 + glowOpacity * 0.04}) drop-shadow(0 0 ${20 + glowOpacity * 22}px rgba(212, 163, 115, ${0.2 + glowOpacity * 0.45})) drop-shadow(0 0 ${8 + glowOpacity * 12}px rgba(249, 115, 22, ${glowOpacity * 0.25}))`
+    : "contrast(1.02) brightness(1.01) drop-shadow(0 0 20px rgba(0, 0, 0, 0.08))";
 
   return (
     <section id="home" className="relative min-h-[90vh] w-full flex flex-col justify-center px-6 overflow-hidden scroll-mt-32 py-16 md:py-0">
@@ -44,16 +84,17 @@ export default function Hero() {
                 onMouseLeave={() => setIsHovered(false)}
                 onTouchStart={() => setIsHovered(true)}
                 onTouchEnd={() => setIsHovered(false)}
+                onTouchMove={() => setIsHovered(true)}
+                onMouseMove={() => setIsHovered(true)}
             >
                 <img
+                    id="hero-portrait"
                     src={heroImage}
                     alt="Kamal Nautiyal - BIM Design Engineer"
                     className="w-full max-h-[45vh] md:max-h-[60vh] object-contain transition-all duration-500 group-hover:scale-105"
                     referrerPolicy="no-referrer"
                     style={{
-                      filter: isHovered 
-                        ? "grayscale(0) sepia(0) contrast(1.05) brightness(1.05) drop-shadow(0 0 35px rgba(212, 163, 115, 0.5))" 
-                        : "grayscale(1) sepia(0.22) contrast(1.1) brightness(1.02)",
+                      filter: currentFilter,
                     }}
                 />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">

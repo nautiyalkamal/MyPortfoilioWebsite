@@ -71,6 +71,8 @@ export default function Workstation() {
         onPrev={handlePrev}
         hasNext={selectedIndex !== null && selectedIndex < workstation.length - 1}
         hasPrev={selectedIndex !== null && selectedIndex > 0}
+        currentIndex={selectedIndex !== null ? selectedIndex : undefined}
+        totalCount={workstation.length}
       />
     </section>
   );

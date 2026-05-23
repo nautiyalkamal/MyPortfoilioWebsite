@@ -95,6 +95,8 @@ export default function GalleryPage() {
         onPrev={handlePrev}
         hasNext={selectedIndex !== null && selectedIndex < allImages.length - 1}
         hasPrev={selectedIndex !== null && selectedIndex > 0}
+        currentIndex={selectedIndex !== null ? selectedIndex : undefined}
+        totalCount={allImages.length}
       />
     </div>
   );

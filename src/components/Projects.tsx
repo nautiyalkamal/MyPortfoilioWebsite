@@ -137,6 +137,8 @@ export default function Projects() {
         onPrev={handlePrev}
         hasNext={selectedProjectIndex !== null && selectedProjectIndex < filteredProjects.length - 1}
         hasPrev={selectedProjectIndex !== null && selectedProjectIndex > 0}
+        currentIndex={selectedProjectIndex !== null ? selectedProjectIndex : undefined}
+        totalCount={filteredProjects.length}
       />
     </section>
   );

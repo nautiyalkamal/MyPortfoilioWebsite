@@ -57,10 +57,10 @@ export default function LocalWebGLBackground() {
           className="w-full h-full object-cover opacity-25"
           referrerPolicy="no-referrer"
           style={{
-            filter: "grayscale(1) sepia(0.25) contrast(1.1) brightness(0.96)",
+            filter: "grayscale(1) contrast(1.15) brightness(0.95)",
           }}
         />
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#FAFAFA]/65 via-[#F4F4F5]/75 to-[#FAF6F0]/65 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-gradient-to-tr from-[#FAFAFA]/65 via-[#F4F4F5]/75 to-[#E4E4E7]/65 mix-blend-multiply" />
         <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white/45" />
       </div>
     );
@@ -81,7 +81,7 @@ export default function LocalWebGLBackground() {
         data-us-disable-mobile="true"
         className="absolute inset-0 w-full h-full mix-blend-multiply opacity-50 sm:opacity-60"
         style={{
-          filter: 'grayscale(1) contrast(0.9) brightness(1.15) opacity(0.75)',
+          filter: 'grayscale(1) contrast(1.22) brightness(1.15) opacity(0.8)',
         }}
       />
       

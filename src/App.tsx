@@ -444,13 +444,13 @@ export default function App() {
               className="w-full h-full object-cover opacity-35"
               referrerPolicy="no-referrer"
               style={{
-                filter: "grayscale(1) sepia(0.24) contrast(1.12) brightness(0.98)",
+                filter: "grayscale(1) contrast(1.2) brightness(0.95)",
               }}
             />
             {/* Elegant overlay to harmonize black, white, grey, and rich beige */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-[#18181B]/10 via-[#F4F4F5]/30 to-[#FAF6F0]/40 mix-blend-color-burn" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#18181B]/15 via-[#F4F4F5]/30 to-[#E4E4E7]/40 mix-blend-multiply" />
             <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white/90" />
-            <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA]/40 via-transparent to-[#FAF6F0]/30" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA]/40 via-transparent to-[#F4F4F5]/30" />
           </div>
         )}
 
@@ -466,7 +466,7 @@ export default function App() {
               canvasRendered ? "opacity-55 sm:opacity-65" : "opacity-0"
             }`}
             style={{
-              filter: 'grayscale(1) contrast(0.9) brightness(1.15) opacity(0.7)',
+              filter: 'grayscale(1) contrast(1.22) brightness(1.15) opacity(0.8)',
             }}
           />
         )}
