@@ -18,14 +18,16 @@ export default function App() {
   const [contentVisible, setContentVisible] = useState(false);
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window !== "undefined") {
-      return window.innerWidth < 1024;
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      return window.innerWidth < 1025 || isMobileUA;
     }
     return false;
   });
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
+      const isMobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      setIsMobile(window.innerWidth < 1025 || isMobileUA);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile, { passive: true });
@@ -33,6 +35,7 @@ export default function App() {
   }, []);
 
   useEffect(() => {
+    if (isMobile) return;
     // Inject the Unicorn Studio script dynamically if not present
     if (!(window as any).UnicornStudio) {
       (window as any).UnicornStudio = { isInitialized: false };
@@ -83,10 +86,15 @@ export default function App() {
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [pathname]);
+  }, [pathname, isMobile]);
 
   // Orchestrator to detect when Unicorn Studio canvas compiles and paint is active
   useEffect(() => {
+    if (isMobile) {
+      setCanvasRendered(true);
+      setContentVisible(true);
+      return;
+    }
     let attempts = 0;
     const interval = setInterval(() => {
       const canvas = document.querySelector('div[data-us-project] canvas');
@@ -101,9 +109,10 @@ export default function App() {
       }
     }, 60);
     return () => clearInterval(interval);
-  }, []);
+  }, [isMobile]);
 
   useEffect(() => {
+    if (isMobile) return;
     let targetX = 0;
     let targetY = 0;
     let currentX = 0;
@@ -293,7 +302,7 @@ export default function App() {
       currentNormalizedY += (targetNY - currentNormalizedY) * 0.08;
 
       if (bgRef.current) {
-        if (window.innerWidth < 1024) {
+        if (isMobile) {
           bgRef.current.style.transform = `translate3d(0px, 0px, 0) scale(1.05)`;
         } else {
           // Luxuriously smooth lag coefficient (0.078) for high-end feel
@@ -307,7 +316,7 @@ export default function App() {
       }
 
       // Synchronize compiled shader active parameters with current interactive velocity in real-time
-      if (window.innerWidth >= 1024 && (window as any).UnicornStudio) {
+      if (!isMobile && (window as any).UnicornStudio) {
         const uni = (window as any).UnicornStudio;
         const insts = uni.instances || uni.getActiveInstances?.() || [];
         const instancesList = Array.isArray(insts) 
@@ -399,7 +408,7 @@ export default function App() {
       }
       cancelAnimationFrame(rafId);
     };
-  }, [pathname]);
+  }, [pathname, isMobile]);
 
   useEffect(() => {
     // Basic smooth scroll implementation for Safari and older versions
@@ -426,6 +435,25 @@ export default function App() {
         {/* Soft, neutral ambient gradients to set the solid white and grey foundation */}
         <div className="absolute inset-0 bg-gradient-to-tr from-[#FAFAFA] via-[#F4F4F5]/95 to-[#E4E4E7] opacity-95" />
         
+        {/* Luxurious black, white, grey, and beige architectural background image for mobile & tablet only */}
+        {isMobile && (
+          <div className="absolute inset-0 w-full h-full overflow-hidden">
+            <img 
+              src="https://i.ibb.co/MyMT4yHV/image.jpg"
+              alt="Luxurious Architectural Aspect"
+              className="w-full h-full object-cover opacity-35"
+              referrerPolicy="no-referrer"
+              style={{
+                filter: "grayscale(1) sepia(0.24) contrast(1.12) brightness(0.98)",
+              }}
+            />
+            {/* Elegant overlay to harmonize black, white, grey, and rich beige */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-[#18181B]/10 via-[#F4F4F5]/30 to-[#FAF6F0]/40 mix-blend-color-burn" />
+            <div className="absolute inset-0 bg-gradient-to-b from-white/60 via-transparent to-white/90" />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#FAFAFA]/40 via-transparent to-[#FAF6F0]/30" />
+          </div>
+        )}
+
         {/* WebGL Canvas container with custom filters to shift animation to clean grey/black/white tones */}
         {!isMobile && (
           <div 

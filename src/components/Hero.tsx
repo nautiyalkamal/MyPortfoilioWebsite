@@ -5,6 +5,7 @@ import LocalWebGLBackground from "./LocalWebGLBackground";
 
 export default function Hero() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const heroImage = "https://i.ibb.co/HDkHfjKH/kml.png";
 
   return (
@@ -39,12 +40,21 @@ export default function Hero() {
             <div 
                 className="relative group cursor-zoom-in"
                 onClick={() => setIsModalOpen(true)}
+                onMouseEnter={() => setIsHovered(true)}
+                onMouseLeave={() => setIsHovered(false)}
+                onTouchStart={() => setIsHovered(true)}
+                onTouchEnd={() => setIsHovered(false)}
             >
                 <img
                     src={heroImage}
                     alt="Kamal Nautiyal - BIM Design Engineer"
-                    className="w-full max-h-[45vh] md:max-h-[60vh] object-contain transition-transform duration-500 group-hover:scale-105"
+                    className="w-full max-h-[45vh] md:max-h-[60vh] object-contain transition-all duration-500 group-hover:scale-105"
                     referrerPolicy="no-referrer"
+                    style={{
+                      filter: isHovered 
+                        ? "grayscale(0) sepia(0) contrast(1.05) brightness(1.05) drop-shadow(0 0 35px rgba(212, 163, 115, 0.5))" 
+                        : "grayscale(1) sepia(0.22) contrast(1.1) brightness(1.02)",
+                    }}
                 />
                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
                     <div className="bg-white/20 backdrop-blur-sm p-3 rounded-full text-white">

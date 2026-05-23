@@ -11,6 +11,7 @@ interface ImageModalProps {
   onPrev?: () => void;
   hasNext?: boolean;
   hasPrev?: boolean;
+  filter?: string;
 }
 
 export default function ImageModal({ 
@@ -21,7 +22,8 @@ export default function ImageModal({
   onNext,
   onPrev,
   hasNext,
-  hasPrev
+  hasPrev,
+  filter
 }: ImageModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -107,6 +109,7 @@ export default function ImageModal({
               alt={altText || "Full size image"}
               className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl selection:bg-none"
               referrerPolicy="no-referrer"
+              style={filter ? { filter } : undefined}
             />
             {altText && (
               <div className="absolute -bottom-10 left-0 right-0 text-center">
