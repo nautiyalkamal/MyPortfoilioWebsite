@@ -43,6 +43,11 @@ export default function ImageModal({
   });
 
   const [lastTap, setLastTap] = useState(0);
+  const imageContainerRef = React.useRef<HTMLDivElement>(null);
+
+  // Desktop drag states when zoomed in
+  const [isDragging, setIsDragging] = useState(false);
+  const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     setMounted(true);
@@ -52,7 +57,36 @@ export default function ImageModal({
   useEffect(() => {
     setScale(1);
     setPosition({ x: 0, y: 0 });
+    setIsDragging(false);
   }, [imageSrc]);
+
+  // Listen to wheel/scroll on desktop to zoom in and out smoothly
+  useEffect(() => {
+    const element = imageContainerRef.current;
+    if (!element || !isOpen) return;
+
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const zoomIntensity = 0.08;
+      const delta = -e.deltaY;
+      const factor = delta > 0 ? (1 + zoomIntensity) : (1 - zoomIntensity);
+
+      setScale(prev => {
+        const nextScale = Math.max(1, Math.min(5, prev * factor));
+        if (nextScale === 1) {
+          setPosition({ x: 0, y: 0 });
+        }
+        return nextScale;
+      });
+    };
+
+    element.addEventListener("wheel", handleWheel, { passive: false });
+    return () => {
+      element.removeEventListener("wheel", handleWheel);
+    };
+  }, [isOpen, imageSrc]);
 
   useEffect(() => {
     if (isOpen) {
@@ -146,9 +180,9 @@ export default function ImageModal({
       const newX = t.clientX - touchState.startX;
       const newY = t.clientY - touchState.startY;
 
-      // Restrain the panning limits beautifully based on dynamic scale
-      const maxPanX = (scale - 1) * window.innerWidth / 2;
-      const maxPanY = (scale - 1) * window.innerHeight / 2;
+      // Restrain the panning limits beautifully with rich, generous bounds to see every single visual detail
+      const maxPanX = Math.max(0, (scale - 1) * window.innerWidth / 1.1);
+      const maxPanY = Math.max(0, (scale - 1) * window.innerHeight / 1.1);
       const constrainedX = Math.max(-maxPanX, Math.min(maxPanX, newX));
       const constrainedY = Math.max(-maxPanY, Math.min(maxPanY, newY));
 
@@ -176,6 +210,37 @@ export default function ImageModal({
     } else {
       setScale(2.5);
       setPosition({ x: 0, y: 0 });
+    }
+  };
+
+  // Mouse drag handlers for desktop view
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (scale <= 1) return;
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(true);
+    setDragStart({ x: e.clientX - position.x, y: e.clientY - position.y });
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || scale <= 1) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const newX = e.clientX - dragStart.x;
+    const newY = e.clientY - dragStart.y;
+
+    const maxPanX = Math.max(0, (scale - 1) * window.innerWidth / 1.1);
+    const maxPanY = Math.max(0, (scale - 1) * window.innerHeight / 1.1);
+    const constrainedX = Math.max(-maxPanX, Math.min(maxPanX, newX));
+    const constrainedY = Math.max(-maxPanY, Math.min(maxPanY, newY));
+
+    setPosition({ x: constrainedX, y: constrainedY });
+  };
+
+  const handleMouseUp = (e: React.MouseEvent) => {
+    if (isDragging) {
+      e.stopPropagation();
+      setIsDragging(false);
     }
   };
 
@@ -258,12 +323,19 @@ export default function ImageModal({
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className="relative overflow-visible flex items-center justify-center"
+              ref={imageContainerRef}
+              className={`relative overflow-visible flex items-center justify-center select-none ${
+                scale > 1 ? (isDragging ? "cursor-grabbing" : "cursor-grab") : "cursor-zoom-in"
+              }`}
               onTouchStart={handleTouchStart}
               onTouchMove={handleTouchMove}
               onTouchEnd={handleTouchEnd}
               onTouchCancel={handleTouchEnd}
               onDoubleClick={handleDoubleClick}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
             >
               <img
                 src={imageSrc}
@@ -274,7 +346,7 @@ export default function ImageModal({
                   filter: filter ? filter : undefined,
                   transform: `translate(${position.x}px, ${position.y}px) scale(${scale})`,
                   transformOrigin: "center center",
-                  transition: touchState.isPinching || touchState.isPanning ? "none" : "transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transition: touchState.isPinching || touchState.isPanning || isDragging ? "none" : "transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)",
                 }}
               />
             </div>
@@ -319,10 +391,10 @@ export default function ImageModal({
 
           {/* Backdrop text hint */}
           <div className="absolute bottom-4 left-4 text-white/25 text-[8.5px] font-bold uppercase tracking-[0.2em] pointer-events-none hidden md:block select-none">
-            Click arrows or use left/right keys to browse • Swipe up/down to close • Double-click to zoom
+            Click arrows or use left/right keys to browse • Drag to pan • Scroll wheel or Double-click to zoom
           </div>
           <div className="absolute bottom-4 left-4 text-white/25 text-[8.5px] font-bold uppercase tracking-[0.2em] pointer-events-none block md:hidden select-none">
-            Swipe left/right to browse • Swipe up/down to close • Pinch or Double-tap to zoom
+            Swipe left/right to browse • Swipe up/down to close • Pinch, Drag or Double-tap to zoom
           </div>
         </motion.div>
       )}
